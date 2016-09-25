@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM ubuntu
 
 MAINTAINER Thomas Kerpe <toke@toke.de>
 
@@ -14,11 +14,7 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
     org.label-schema.vcs-type="Git" \
     org.label-schema.vcs-url="https://github.com/toke/docker-mosquitto"
 
-RUN apt-get update && apt-get install -y wget && \
-    wget -q -O - https://repo.mosquitto.org/debian/mosquitto-repo.gpg.key | gpg --import && \
-    gpg -a --export 8277CCB49EC5B595F2D2C71361611AE430993623 | apt-key add - && \
-    wget -q -O /etc/apt/sources.list.d/mosquitto-jessie.list https://repo.mosquitto.org/debian/mosquitto-jessie.list && \
-    apt-get update && apt-get install -y mosquitto && \
+RUN apt-get update && apt-get install -y mosquitto && \
     adduser --system --disabled-password --disabled-login mosquitto
 
 RUN mkdir -p /mqtt/config /mqtt/data /mqtt/log
@@ -27,7 +23,7 @@ RUN chown -R mosquitto:mosquitto /mqtt
 VOLUME ["/mqtt/config", "/mqtt/data", "/mqtt/log"]
 
 
-EXPOSE 1883 9001
+EXPOSE 1883 9001 9002 9003
 
 ADD docker-entrypoint.sh /usr/bin/
 
